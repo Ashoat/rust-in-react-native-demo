@@ -43,6 +43,10 @@ target 'RustInReactNativeDemo' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  if ENV['RCT_NEW_ARCH_ENABLED'] == '1'
+    pod 'AppTurboModules', :path => "./../tm"
+  end
+
   target 'RustInReactNativeDemoTests' do
     inherit! :complete
     # Pods for testing

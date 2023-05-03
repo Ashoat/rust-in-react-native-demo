@@ -2,6 +2,13 @@
 
 #import <React/RCTBundleURLProvider.h>
 
+#import <React/CoreModulesPlugins.h>
+#import <ReactCommon/RCTTurboModuleManager.h>
+#import <AppTurboModules/NativeTurboModule.h>
+
+@interface AppDelegate () <RCTTurboModuleManagerDelegate> {}
+@end
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -31,6 +38,18 @@
 - (BOOL)concurrentRootEnabled
 {
   return true;
+}
+
+
+#pragma mark RCTTurboModuleManagerDelegate
+
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const std::string &)name
+                                                      jsInvoker:(std::shared_ptr<facebook::react::CallInvoker>)jsInvoker
+{
+  if (name == "NativeTurboModule") {
+    return std::make_shared<facebook::react::NativeTurboModule>(jsInvoker);
+  }
+  return nullptr;
 }
 
 @end

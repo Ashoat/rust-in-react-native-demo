@@ -1,5 +1,10 @@
 {
   "name": "RustInReactNativeDemo",
+  "description": "Demo of how to use Rust in React Native",
+  "author": "Ashoat Tevosyan <ashoat@gmail.com> (https://github.com/ashoat)",
+  "license": "BSD-3-Clause",
+  "homepage": "https://github.com/Ashoat/rust-in-react-native-demo/#readme",
+  "repository": "https://github.com/Ashoat/rust-in-react-native-demo",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -32,5 +37,13 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "codegenConfig": {
+    "name": "AppSpecs",
+    "type": "all",
+    "jsSrcsDir": "tm",
+    "android": {
+      "javaPackageName": "com.facebook.fbreact.specs"
+    }
   }
 }
