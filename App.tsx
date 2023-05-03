@@ -15,15 +15,11 @@ import {
   Text,
   useColorScheme,
   View,
+  TextInput,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import { Colors, Header } from 'react-native/Libraries/NewAppScreen';
+import NativeTurboModule from './tm/NativeTurboModule';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -62,6 +58,20 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  const [firstInput, setFirstInput] = React.useState('');
+  const [secondInput, setSecondInput] = React.useState('');
+
+  const [addResult, setAddResult] = React.useState('');
+  React.useEffect(() => {
+    (async () => {
+      const result = await NativeTurboModule.add(
+        parseInt(firstInput),
+        parseInt(secondInput),
+      );
+      setAddResult(result.toString());
+    })();
+  }, [firstInput, secondInput]);
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
@@ -76,20 +86,27 @@ function App(): JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
+          <Section title="Cxx TurboModule">
+            <View style={styles.textInputContainer}>
+              <TextInput
+                onChangeText={setFirstInput}
+                value={firstInput}
+                style={styles.textInput}
+                placeholder="First number"
+              />
+              <TextInput
+                onChangeText={setSecondInput}
+                value={secondInput}
+                style={styles.textInput}
+                placeholder="Second number"
+              />
+            </View>
+            <View style={styles.centerTextContainer}>
+              <Text style={styles.centerText}>
+                Sum = {addResult}
+              </Text>
+            </View>
           </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -110,8 +127,24 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
   },
-  highlight: {
-    fontWeight: '700',
+  textInputContainer: {
+    flexDirection: 'row',
+  },
+  textInput: {
+    height: 40,
+    width: '100%',
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 4,
+    margin: 8,
+    padding: 8,
+  },
+  centerTextContainer: {
+    width: '100%',
+  },
+  centerText: {
+    textAlign: 'center',
+    fontSize: 24,
   },
 });
 
