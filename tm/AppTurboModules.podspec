@@ -16,5 +16,12 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = {
     "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
   }
+  s.script_phases = [
+    {
+      :name => 'Build Rust library',
+      :script => '${PODS_TARGET_SRCROOT}/build-rust-native-library.sh',
+      :execution_position => :before_compile
+    }
+  ]
   install_modules_dependencies(s)
 end
