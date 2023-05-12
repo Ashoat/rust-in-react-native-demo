@@ -7,13 +7,15 @@
 #endif
 #include <memory>
 
-namespace facebook::react {
+namespace facebook::react
+{
 
-class NativeTurboModule : public NativeTurboModuleCxxSpec<NativeTurboModule> {
- public:
-  NativeTurboModule(std::shared_ptr<CallInvoker> jsInvoker);
+  class NativeTurboModule : public NativeTurboModuleCxxSpec<NativeTurboModule>
+  {
+  public:
+    NativeTurboModule(std::shared_ptr<CallInvoker> jsInvoker);
 
-  jsi::Value add(jsi::Runtime &rt, double a, double b);
-};
+    jsi::Value add(jsi::Runtime &rt, double a, double b);
+  };
 
 } // namespace facebook::react

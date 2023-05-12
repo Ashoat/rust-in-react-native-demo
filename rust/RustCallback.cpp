@@ -1,6 +1,7 @@
 #include "RustCallback.h"
 #include <future>
 #include <iostream>
+#include "../tm/RustPromiseManager.h"
 
 void stringCallback(rust::String error, uint32_t promiseID, rust::String ret)
 {
