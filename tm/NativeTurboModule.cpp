@@ -1,6 +1,8 @@
 #include "NativeTurboModule.h"
 
 #include <ReactCommon/TurboModuleUtils.h>
+#include "RustPromiseManager.h"
+#include "dist/lib.rs.h"
 
 namespace facebook::react {
 
@@ -12,6 +14,21 @@ jsi::Value NativeTurboModule::add(jsi::Runtime& rt, double a, double b) {
     rt,
     [=](jsi::Runtime &innerRt, std::shared_ptr<Promise> promise) {
       promise->resolve(a + b);
+      std::string error;
+      try {
+        auto currentID = RustPromiseManager::instance.addPromise(
+          promise,
+          this->jsInvoker_,
+          innerRt
+        );
+        rustAdd(
+          a,
+          b,
+          currentID
+        );
+      } catch (const std::exception &e) {
+        error = e.what();
+      }
     }
   );
 }
