@@ -12,7 +12,10 @@ Pod::Spec.new do |s|
   s.platforms       = { :ios => "12.4" }
   s.author          = package["author"]
   s.source          = { :git => package["repository"], :tag => "#{s.version}" }
-  s.source_files    = "**/*.{h,cpp}"
+  s.source_files    = "**/*.{h,cpp}", "dist/cxx.h", "dist/lib.rs.cc", "dist/lib.rs.h"
+  s.public_header_files = "**/*.h"
+  s.vendored_libraries = '../rust/target/universal/release/librust.a'
+  s.libraries = ['rust']
   s.pod_target_xcconfig = {
     "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
   }
