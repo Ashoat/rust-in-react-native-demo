@@ -22,14 +22,49 @@
 #    }
 # }
 
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.18)
 
 # Define the library name here.
 project(appmodules)
 
+include(FetchContent)
+
+FetchContent_Declare(
+  Corrosion
+  GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
+  GIT_TAG v0.2.1
+)
+
+FetchContent_MakeAvailable(Corrosion)
+
+include(corrosion_cxx.cmake)
+
 # This file includes all the necessary to let you build your application with the New Architecture.
 include(${REACT_ANDROID_DIR}/cmake-utils/ReactNative-application.cmake)
 
+if(CMAKE_ANDROID_ARCH_ABI STREQUAL arm64-v8a)
+  set(Rust_CARGO_TARGET aarch64-linux-android)
+elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL x86)
+  set(Rust_CARGO_TARGET i686-linux-android)
+elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL x86_64)
+  set(Rust_CARGO_TARGET x86_64-linux-android)
+elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL armeabi-v7a)
+  set(Rust_CARGO_TARGET armv7-linux-androideabi)
+endif()
+
+string(TOLOWER ${CMAKE_HOST_SYSTEM_NAME} CMAKE_HOST_SYSTEM_NAME_LOWER)
+set(_toolchain_path
+  "$ENV{ANDROID_HOME}/ndk/${NDK_VERSION}/toolchains/llvm/prebuilt/${CMAKE_HOST_SYSTEM_NAME_LOWER}-x86_64/bin"
+)
+if(EXISTS "${_toolchain_path}/${Rust_CARGO_TARGET}-ar")
+  set(AR "${_toolchain_path}/${Rust_CARGO_TARGET}-ar")
+else()
+  set(AR "${_toolchain_path}/llvm-ar")
+endif()
+
+
+add_library_rust(PATH ../../../../../rust NAMESPACE demo)
+
 # App needs to add and link against tm (TurboModules) folder
 add_subdirectory(${REACT_ANDROID_DIR}/../../../tm/ tm_build)
-target_link_libraries(${CMAKE_PROJECT_NAME} tm)
+target_link_libraries(${CMAKE_PROJECT_NAME} tm demo::rust)
